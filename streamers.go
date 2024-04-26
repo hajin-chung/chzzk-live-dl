@@ -17,7 +17,7 @@ type Streamer struct {
 	Id            string `json:"id"`
 	Name          string `json:"name"`
 	Image         string `json:"image"`
-	FollowerCount int `json:"followerCount"`
+	FollowerCount int    `json:"followerCount"`
 	IsLive        bool   `json:"isLive"`
 	IsDownloading bool   `json:"isDownloading"`
 	AutoDownload  bool   `json:"autoDownload"`
@@ -90,7 +90,7 @@ func (s *Streamers) Watch() {
 					log.Printf("update streamer error: %s\n", err)
 					continue
 				}
-				if s.Infos[id].AutoDownload == true && s.Infos[id].IsDownloading == false && s.Processes[id] == nil {
+				if s.Infos[id].IsLive && s.Infos[id].AutoDownload && s.Processes[id] == nil {
 					s.StartDownload(id)
 				}
 			}
@@ -103,14 +103,21 @@ func (s *Streamers) UpdateStreamer(id string) error {
 	if err != nil {
 		return err
 	}
-	s.Infos[id] = &Streamer{
-		Id:            info.Id,
-		Name:          info.Name,
-		Image:         info.Image,
-		FollowerCount: info.FollowerCount,
-		IsLive:        info.IsLive,
-		IsDownloading: s.Processes[id] != nil,
-		AutoDownload:  true,
+	if s.Infos[id] == nil {
+		s.Infos[id] = &Streamer{
+			Id:            info.Id,
+			Name:          info.Name,
+			Image:         info.Image,
+			FollowerCount: info.FollowerCount,
+			IsLive:        info.IsLive,
+			IsDownloading: s.Processes[id] != nil,
+			AutoDownload:  true,
+		}
+	} else {
+		s.Infos[id].Name = info.Name
+		s.Infos[id].Image = info.Image
+		s.Infos[id].FollowerCount = info.FollowerCount
+		s.Infos[id].IsLive = info.IsLive
 	}
 	return nil
 }
@@ -133,16 +140,20 @@ func (s *Streamers) DeleteStreamer(id string) error {
 	if s.Infos[id] == nil {
 		return errors.New("streamer with id doesnt exist")
 	}
+
+	if s.Processes[id] != nil {
+		err := s.StopDownload(id)
+		if err != nil {
+			return err
+		}
+	}
+
 	delete(s.Infos, id)
 	err := s.UpdateFile()
 	if err != nil {
 		return err
 	}
 
-	err = s.StopDownload(id)
-	if err != nil {
-		return err
-	}
 	return nil
 }
 
@@ -189,8 +200,10 @@ func (s *Streamers) StopDownload(id string) error {
 		return errors.New("download process doesn't exists")
 	}
 
+	s.Infos[id].IsDownloading = false
 	err := s.Processes[id].Command.Process.Signal(syscall.SIGINT)
 	if err != nil {
+		s.Infos[id].IsDownloading = true
 		return err
 	}
 	return nil

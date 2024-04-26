@@ -28,7 +28,10 @@ func main() {
 
 	e := echo.New()
 
-	e.Use(middleware.Logger())
+	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
+		Format: "${method} ${uri} ${status}\n",
+	}))
+	e.Use(middleware.CORSWithConfig(middleware.DefaultCORSConfig))
 
 	e.GET("/api/streamer", func(c echo.Context) error {
 		return c.JSON(200, streamers.Infos)
@@ -39,7 +42,7 @@ func main() {
 		log.Println(query)
 		data, err := SearchChannel(query)
 		if err != nil {
-			return err
+			return c.JSON(500, ErrorResponse(err))
 		}
 
 		return c.JSON(200, data)
@@ -49,7 +52,7 @@ func main() {
 		id := c.Param("id")
 		err := streamers.AddStreamer(id)
 		if err != nil {
-			return err
+			return c.JSON(500, ErrorResponse(err))
 		}
 
 		return c.JSON(200, streamers.Infos)
@@ -58,8 +61,9 @@ func main() {
 	e.DELETE("/api/streamer/:id", func(c echo.Context) error {
 		id := c.Param("id")
 		err := streamers.DeleteStreamer(id)
+		log.Printf("%+v\n", streamers.Infos)
 		if err != nil {
-			return err
+			return c.JSON(500, ErrorResponse(err))
 		}
 
 		return c.JSON(200, streamers.Infos)
@@ -69,7 +73,7 @@ func main() {
 		id := c.Param("id")
 		err := streamers.StartDownload(id)
 		if err != nil {
-			return err
+			return c.JSON(500, ErrorResponse(err))
 		}
 
 		return c.JSON(200, streamers.Infos)
@@ -79,7 +83,7 @@ func main() {
 		id := c.Param("id")
 		err := streamers.StopDownload(id)
 		if err != nil {
-			return err
+			return c.JSON(500, ErrorResponse(err))
 		}
 
 		return c.JSON(200, streamers.Infos)
@@ -102,13 +106,13 @@ func main() {
 	e.POST("/api/cred", func(c echo.Context) error {
 		bytes, err := io.ReadAll(c.Request().Body)
 		if err != nil {
-			return err
+			return c.JSON(500, ErrorResponse(err))
 		}
 
 		credentials := &Credentials{}
 		err = json.Unmarshal(bytes, credentials)
 		if err != nil {
-			return err
+			return c.JSON(500, ErrorResponse(err))
 		}
 
 		os.Setenv("NID_AUT", credentials.NID_AUT)
