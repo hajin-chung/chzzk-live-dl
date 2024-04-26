@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"flag"
 	"io"
 	"log"
 	"os"
@@ -16,6 +17,10 @@ func main() {
 	if err != nil {
 		log.Fatalf("error loading .env file: %s\n", err)
 	}
+
+	dirFlag := flag.String("out", "./", "output dir")
+	flag.Parse()
+	os.Setenv("dir", *dirFlag)
 
 	InitClient()
 

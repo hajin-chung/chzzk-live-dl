@@ -7,6 +7,7 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"path"
 	"syscall"
 	"time"
 
@@ -79,7 +80,7 @@ func (s *Streamers) Load() error {
 }
 
 func (s *Streamers) Watch() {
-	ticker := time.NewTicker(10 * time.Second)
+	ticker := time.NewTicker(30 * time.Second)
 
 	go func() {
 		for ; true; <-ticker.C {
@@ -170,7 +171,9 @@ func (s *Streamers) StartDownload(id string) error {
 		return err
 	}
 
-	outputPath := gozaru.Sanitize(fmt.Sprintf("%s-%s.mp4", s.Infos[id].Name, FormatDate()))
+	outDir := os.Getenv("dir")
+	filename := gozaru.Sanitize(fmt.Sprintf("%s-%s.mp4", s.Infos[id].Name, FormatDate()))
+	outputPath := path.Join(outDir, filename)
 	args := []string{"-loglevel", "error", "-i", playlistUrl, "-c", "copy", outputPath}
 	log.Printf("ffmpeg %+v\n", args)
 	cmd := exec.Command("ffmpeg", args...)

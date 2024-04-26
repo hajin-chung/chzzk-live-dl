@@ -106,7 +106,7 @@ function useStreamers() {
 
   useEffect(() => {
     updateStreamers();
-    const interval = setInterval(updateStreamers, 10 * 1000);
+    const interval = setInterval(updateStreamers, 30 * 1000);
     return () => clearInterval(interval);
   }, []);
 
