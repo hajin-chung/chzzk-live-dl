@@ -7,17 +7,11 @@ import (
 	"log"
 	"os"
 
-	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
 
 func main() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatalf("error loading .env file: %s\n", err)
-	}
-
 	dirFlag := flag.String("out", "./", "output dir")
 	flag.Parse()
 	os.Setenv("dir", *dirFlag)
@@ -25,7 +19,7 @@ func main() {
 	InitClient()
 
 	streamers := Streamers{}
-	err = streamers.Load()
+	err := streamers.Load()
 	if err != nil {
 		log.Fatalf("error loading streamer from file: %s\n", err)
 	}
