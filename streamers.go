@@ -17,6 +17,7 @@ type Streamer struct {
 	Id            string `json:"id"`
 	Name          string `json:"name"`
 	Image         string `json:"image"`
+	FollowerCount int `json:"followerCount"`
 	IsLive        bool   `json:"isLive"`
 	IsDownloading bool   `json:"isDownloading"`
 	AutoDownload  bool   `json:"autoDownload"`
@@ -106,6 +107,7 @@ func (s *Streamers) UpdateStreamer(id string) error {
 		Id:            info.Id,
 		Name:          info.Name,
 		Image:         info.Image,
+		FollowerCount: info.FollowerCount,
 		IsLive:        info.IsLive,
 		IsDownloading: s.Processes[id] != nil,
 		AutoDownload:  true,

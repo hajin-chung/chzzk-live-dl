@@ -1,2 +1,4 @@
 *.mp4
 .env
+tmp
+ids.txt

@@ -34,6 +34,17 @@ func main() {
 		return c.JSON(200, streamers.Infos)
 	})
 
+	e.GET("/api/streamer/search", func(c echo.Context) error {
+		query := c.QueryParam("query")
+		log.Println(query)
+		data, err := SearchChannel(query)
+		if err != nil {
+			return err
+		}
+
+		return c.JSON(200, data)
+	})
+
 	e.POST("/api/streamer/:id", func(c echo.Context) error {
 		id := c.Param("id")
 		err := streamers.AddStreamer(id)
