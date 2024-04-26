@@ -16,5 +16,9 @@ COPY --from=server-builder /server/chzzk-live-dl .
 COPY --from=web-builder /web/dist ./public
 EXPOSE 2000
 
-CMD ["./chzzk-live-dl", "--dir=/streams"]
+RUN apk update
+RUN apk upgrade
+RUN apk add --no-cache ffmpeg
+
+CMD ["./chzzk-live-dl", "--out=/streams"]
 
