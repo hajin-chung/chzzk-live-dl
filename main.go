@@ -38,6 +38,12 @@ func main() {
 	}))
 	e.Use(middleware.CORSWithConfig(middleware.DefaultCORSConfig))
 
+	e.Static("/", "public")
+
+	// e.GET("/*", func(c echo.Context) error {
+	// 	return c.File("public/index.html")
+	// })
+
 	e.GET("/api/streamer", func(c echo.Context) error {
 		return c.JSON(200, streamers.Infos)
 	})
