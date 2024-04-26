@@ -18,6 +18,7 @@ import {
   RefreshIcon,
   StopIcon,
 } from "./components/icons.tsx";
+import { Credentials } from "./Credentials.tsx";
 
 function App() {
   const { streamers, updateStreamers, setStreamers } = useStreamers();
@@ -46,7 +47,10 @@ function App() {
         <Button variant="ghost" onClick={updateStreamers}>
           <RefreshIcon />
         </Button>
-        <Search onAdd={onAdd} streamers={streamers} />
+        <div className="flex gap-3">
+          <Credentials />
+          <Search onAdd={onAdd} streamers={streamers} />
+        </div>
       </div>
       <div className="h-4" />
       <div className="flex flex-col gap-2">

@@ -20,6 +20,11 @@ export type Streamer = {
 
 export type Streamers = Record<string, Streamer>
 
+export type Credentials = {
+  NID_AUT: string;
+  NID_SES: string
+}
+
 export async function searchChannels(query: string) {
   const res = await ft(
     `${import.meta.env.VITE_API_ENDPOINT}/api/streamer/search?query=${query}`,
@@ -89,4 +94,13 @@ export async function getStreamers() {
   );
   const data = (await res.json()) as Streamers;
   return data;
+}
+
+export async function updateCredentials(NID_SES: string, NID_AUT: string) {
+  const res = await ft(
+    `${import.meta.env.VITE_API_ENDPOINT}/api/cred`,
+    { method: "POST", body: JSON.stringify({ NID_SES, NID_AUT }) }
+  )
+  const data = (await res.json()) as Credentials;
+  return data
 }
