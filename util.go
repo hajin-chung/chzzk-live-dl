@@ -58,7 +58,7 @@ func ReaderLogger(prefix string, reader io.Reader) error {
 		}
 		lines := strings.Split(string(buffer[:]), "\n")
 		for _, line := range lines {
-			fmt.Printf("[%s] %s", prefix, line)
+			fmt.Printf("[%s] %s\n", prefix, line)
 		}
 	}
 }
