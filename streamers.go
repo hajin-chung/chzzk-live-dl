@@ -27,6 +27,7 @@ type Streamer struct {
 type DownloadProcess struct {
 	Command *exec.Cmd
 	Err     error
+	StdErr  chan string
 }
 
 type Streamers struct {
@@ -183,8 +184,9 @@ func (s *Streamers) StartDownload(id string) error {
 			Err:     nil,
 		}
 		s.Infos[id].IsDownloading = true
+		CmdLogger(s.Infos[id].Name, cmd)
 
-		err := cmd.Run()
+		err = cmd.Run()
 		s.Infos[id].IsDownloading = false
 		log.Printf("stopped downloading %s\n", id)
 		delete(s.Processes, id)
