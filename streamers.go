@@ -175,7 +175,7 @@ func (s *Streamers) StartDownload(id string) error {
 	outDir := os.Getenv("dir")
 	filename := gozaru.Sanitize(fmt.Sprintf("%s-%s.mp4", s.Infos[id].Name, FormatDate()))
 	outputPath := path.Join(outDir, filename)
-	args := []string{"-loglevel", "error", "-progress", "-", "-nostats", "-i", playlistUrl, "-c", "copy", outputPath}
+	args := []string{"-i", playlistUrl, "-c", "copy", outputPath}
 	log.Printf("ffmpeg %+v\n", args)
 	cmd := exec.Command("ffmpeg", args...)
 	go (func() {
