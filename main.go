@@ -70,7 +70,6 @@ func main() {
 	e.DELETE("/api/streamer/:id", func(c echo.Context) error {
 		id := c.Param("id")
 		err := streamers.DeleteStreamer(id)
-		log.Printf("%+v\n", streamers.Infos)
 		if err != nil {
 			return c.JSON(500, ErrorResponse(err))
 		}
