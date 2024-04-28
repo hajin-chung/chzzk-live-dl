@@ -51,7 +51,7 @@ func (s *Streamers) UpdateFile() error {
 	return nil
 }
 
-func (s *Streamers) Load() error {
+func (s *Streamers) Load(idFilePath string) error {
 	if s.Infos == nil {
 		s.Infos = map[string]*Streamer{}
 	}
@@ -59,7 +59,7 @@ func (s *Streamers) Load() error {
 		s.Processes = map[string]*DownloadProcess{}
 	}
 
-	idFile, err := os.OpenFile("ids.txt", os.O_RDONLY|os.O_CREATE, 0600)
+	idFile, err := os.OpenFile(idFilePath, os.O_RDONLY|os.O_CREATE, 0600)
 	if err != nil {
 		return err
 	}

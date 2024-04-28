@@ -20,5 +20,5 @@ RUN apk update
 RUN apk upgrade
 RUN apk add --no-cache ffmpeg
 
-CMD ["./chzzk-live-dl", "--out=/streams"]
+CMD ["./chzzk-live-dl", "--cred=/config/creds", "--id=/config/ids.txt", "--out=/streams"]
 

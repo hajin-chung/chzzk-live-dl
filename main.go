@@ -9,17 +9,25 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"github.com/joho/godotenv"
 )
 
 func main() {
+	credFileFlag := flag.String("cred", ".env", "env file path")
+	idFileFlag := flag.String("id", "/config/ids.txt", "id file path")
 	dirFlag := flag.String("out", "./", "output dir")
 	flag.Parse()
 	os.Setenv("dir", *dirFlag)
 
+	err := godotenv.Load(*credFileFlag)
+	if err != nil {
+		log.Fatalf("error loading .env file: %s\n", err)
+	}
+
 	InitClient()
 
 	streamers := Streamers{}
-	err := streamers.Load()
+	err = streamers.Load(*idFileFlag)
 	if err != nil {
 		log.Fatalf("error loading streamer from file: %s\n", err)
 	}

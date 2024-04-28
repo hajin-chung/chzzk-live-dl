@@ -57,7 +57,7 @@ func GetPlaylistUrl(channelId string) (string, error) {
 
 	var targetMediaData *MediaData = nil
 	for _, mediaData := range playbackData.Media {
-		if mediaData.MediaId == "HLS" {
+		if mediaData.MediaId == "LLHLS" {
 			targetMediaData = &mediaData
 		}
 	}
