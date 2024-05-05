@@ -36,7 +36,7 @@ type Streamers struct {
 }
 
 func (s *Streamers) UpdateFile() error {
-	idFile, err := os.OpenFile("ids.txt", os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0666)
+	idFile, err := os.OpenFile(os.Getenv("id_file"), os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0666)
 	if err != nil {
 		return err
 	}

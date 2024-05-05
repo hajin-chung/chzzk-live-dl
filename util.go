@@ -11,8 +11,8 @@ import (
 func FormatDate() string {
 	currentTime := time.Now()
 	return fmt.Sprintf(
-		"%d%02d%02d-%02d%02d%02d",
-		currentTime.Year(),
+		"%02d%02d%02d-%02d%02d%02d",
+		currentTime.Year() % 100,
 		currentTime.Month(),
 		currentTime.Day(),
 		currentTime.Hour(),

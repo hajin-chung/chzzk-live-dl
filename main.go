@@ -18,6 +18,7 @@ func main() {
 	dirFlag := flag.String("out", "./", "output dir")
 	flag.Parse()
 	os.Setenv("dir", *dirFlag)
+	os.Setenv("id_file", *idFileFlag)
 
 	err := godotenv.Load(*credFileFlag)
 	if err != nil {
